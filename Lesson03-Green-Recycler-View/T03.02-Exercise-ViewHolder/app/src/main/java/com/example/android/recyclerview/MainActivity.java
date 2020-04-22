@@ -19,12 +19,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.android.recyclerview.database.AppDatabase;
+import com.example.android.recyclerview.database.TaskEntry;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_LIST_ITEMS = 100;
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     /*
      * References to RecyclerView and Adapter to reset the list to its
@@ -73,5 +78,12 @@ public class MainActivity extends AppCompatActivity {
         mNumbersList.setAdapter(mAdapter);
 
         mDb = AppDatabase.getInstance(this);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        List<TaskEntry>tasks =  mDb.taskDao().loadAllTasks();
+        Log.d(LOG_TAG,"");
     }
 }

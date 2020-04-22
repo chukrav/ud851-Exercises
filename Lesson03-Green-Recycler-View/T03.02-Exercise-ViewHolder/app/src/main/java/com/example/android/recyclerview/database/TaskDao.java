@@ -23,4 +23,7 @@ public interface TaskDao {
     @Delete
     void deleteTask(TaskEntry taskEntry);
 
+    @Insert
+    void insertAll(TaskEntry... taskEntries);
+
 }

@@ -19,6 +19,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
     private static final String DATABASE_NAME = "todolist";
     private static AppDatabase sInstance;
+    private static JSONArray mArray;
 
     public static AppDatabase getInstance(Context context) {
         if (sInstance == null) {
@@ -34,13 +35,13 @@ public abstract class AppDatabase extends RoomDatabase {
 
             }
         }
-        Log.d(LOG_TAG, "Getting the database instance");
+        Log.d(LOG_TAG, "Getting the database instance: ");
         return sInstance;
     }
 
     private static AppDatabase buildDatabase(final Context context) {
         return Room.databaseBuilder(context.getApplicationContext(),
-                AppDatabase.class,DATABASE_NAME)
+                AppDatabase.class, DATABASE_NAME)
                 .addCallback(new Callback() {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -48,12 +49,12 @@ public abstract class AppDatabase extends RoomDatabase {
                         Executors.newSingleThreadExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
-                                Log.d(LOG_TAG,"OnCreate task to do");
+                                Log.d(LOG_TAG, "OnCreate task to do");
                                 String data = JSONuse.loadJSONFromAsset(context);
                                 JSONArray array = JSONuse.readJSONArray(data);
                                 JSONuse.readJObject(array, 0);
-                                Log.d(LOG_TAG,"After JSON read ...."+array.length());
-
+//                                Log.d(LOG_TAG, "After JSON read ...." + array.length());
+                                mArray = array;
                             }
                         });
                     }
