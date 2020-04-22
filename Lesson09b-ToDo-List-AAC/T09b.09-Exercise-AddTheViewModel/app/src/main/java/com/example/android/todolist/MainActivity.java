@@ -18,6 +18,7 @@ package com.example.android.todolist;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -110,16 +111,18 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         });
 
         mDb = AppDatabase.getInstance(getApplicationContext());
-        retrieveTasks();
+        setupViewModel();
     }
 
     // TODO (8) This method is not retrieving the tasks any more. Refactor to a more suitable name such as setupViewModel
-    private void retrieveTasks() {
+    private void setupViewModel() {
         // TODO (5) Remove the logging and the call to loadAllTasks, this is done in the ViewModel now
-        Log.d(TAG, "Actively retrieving the tasks from the DataBase");
-        LiveData<List<TaskEntry>> tasks = mDb.taskDao().loadAllTasks();
+//        Log.d(TAG, "Actively retrieving the tasks from the DataBase");
+//        LiveData<List<TaskEntry>> tasks = mDb.taskDao().loadAllTasks();
         // TODO (6) Declare a ViewModel variable and initialize it by calling ViewModelProviders.of
         // TODO (7) Observe the LiveData object in the ViewModel
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        LiveData<List<TaskEntry>> tasks = viewModel.getTasks();
         tasks.observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {

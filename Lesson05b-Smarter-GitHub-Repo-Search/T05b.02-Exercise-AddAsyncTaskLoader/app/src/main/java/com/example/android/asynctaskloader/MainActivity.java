@@ -15,6 +15,9 @@
  */
 package com.example.android.asynctaskloader;
 
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
+import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 
 // TODO (1) implement LoaderManager.LoaderCallbacks<String> on MainActivity
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
 
     /* A constant to save and restore the URL that is being displayed */
     private static final String SEARCH_QUERY_URL_EXTRA = "query";
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SEARCH_RESULTS_RAW_JSON = "results";
 
     // TODO (2) Create a constant int to uniquely identify your loader. Call it GITHUB_SEARCH_LOADER
+    private static final int GITHUB_SEARCH_LOADER = 22;
 
     private EditText mSearchBoxEditText;
 
@@ -131,6 +135,35 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public Loader<String> onCreateLoader(int i, final Bundle args) {
+        return new AsyncTaskLoader<String>(this){
+
+            @Override
+            public String loadInBackground() {
+                return null;
+            }
+
+            @Override
+            protected void onStartLoading() {
+                //super.onStartLoading();
+                if (args == null){
+                    return;
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String s) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+
     // TODO (3) Override onCreateLoader
     // Within onCreateLoader
         // TODO (4) Return a new AsyncTaskLoader<String> as an anonymous inner class with this as the constructor's parameter
@@ -196,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+// Loader override methods ****************
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

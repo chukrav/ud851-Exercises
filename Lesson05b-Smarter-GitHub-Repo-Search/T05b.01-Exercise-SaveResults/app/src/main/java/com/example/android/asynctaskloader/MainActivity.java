@@ -15,9 +15,11 @@
  */
 package com.example.android.asynctaskloader;
 
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,9 +35,9 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
 
     // TODO (1) Create a static final key to store the query's URL
-
+    private static final String QUERY_URL_KEY = "query";
     // TODO (2) Create a static final key to store the search's raw JSON
-
+    private static final String SEARCH_RAW_JSON_KEY = "jsonkey";
     private EditText mSearchBoxEditText;
 
     private TextView mUrlDisplayTextView;
@@ -60,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         // TODO (9) If the savedInstanceState bundle is not null, set the text of the URL and search results TextView respectively
+        if (savedInstanceState != null){
+            String savedUrl = savedInstanceState.getString(QUERY_URL_KEY);
+            mUrlDisplayTextView.setText(savedUrl);
+            String savedJson = savedInstanceState.getString(SEARCH_RAW_JSON_KEY);
+            mSearchResultsTextView.setText(savedJson);
+        }
     }
 
     /**
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
         new GithubQueryTask().execute(githubSearchUrl);
+//        Log.d("MAINACTIVITY",githubSearchUrl.toString());
     }
 
     /**
@@ -126,10 +135,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String githubSearchResults) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
+            Log.d("MAINACTIVITY","onPostExecute");
             if (githubSearchResults != null && !githubSearchResults.equals("")) {
                 showJsonDataView();
                 mSearchResultsTextView.setText(githubSearchResults);
             } else {
+                Log.d("MAINACTIVITY","onPostExecute: no results");
                 showErrorMessage();
             }
         }
@@ -154,6 +165,15 @@ public class MainActivity extends AppCompatActivity {
     // TODO (3) Override onSaveInstanceState to persist data across Activity recreation
     // Do the following steps within onSaveInstanceState
     // TODO (4) Make sure super.onSaveInstanceState is called before doing anything else
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String urlQuery = mUrlDisplayTextView.getText().toString();
+        outState.putString(QUERY_URL_KEY, urlQuery);
+        String rawJsonSearch = mSearchResultsTextView.getText().toString();
+        outState.putString(SEARCH_RAW_JSON_KEY,rawJsonSearch);
+    }
 
     // TODO (5) Put the contents of the TextView that contains our URL into a variable
     // TODO (6) Using the key for the query URL, put the string in the outState Bundle
