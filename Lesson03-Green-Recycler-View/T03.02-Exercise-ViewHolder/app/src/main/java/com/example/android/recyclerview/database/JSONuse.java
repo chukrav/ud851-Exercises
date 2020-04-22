@@ -1,4 +1,4 @@
-package com.example.prepopulatedb.database;
+package com.example.android.recyclerview.database;
 
 import android.content.Context;
 import android.util.Log;

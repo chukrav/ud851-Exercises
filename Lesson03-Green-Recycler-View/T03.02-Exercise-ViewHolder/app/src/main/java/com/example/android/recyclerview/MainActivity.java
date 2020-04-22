@@ -20,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.android.recyclerview.database.AppDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_LIST_ITEMS = 100;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private GreenAdapter mAdapter;
     private RecyclerView mNumbersList;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,5 +71,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
 
         mNumbersList.setAdapter(mAdapter);
+
+        mDb = AppDatabase.getInstance(this);
     }
 }
